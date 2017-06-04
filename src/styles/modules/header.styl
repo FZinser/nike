@@ -30,7 +30,7 @@ mainHeaderHeight = 50px;
 	.logo {
 		align-self: center;
 		margin-left: 10px;
-		margin-right: auto;
+		
 	}
 
 	.menu-button {
@@ -56,44 +56,12 @@ mainHeaderHeight = 50px;
 			width: @height;
 		}
 	}
-
-	.main-nav {
-		margin-left: auto;
-
-		#open-menu {
-			display: none;
-
-			&:checked {
-				& ~ .list {
-					opacity: 1;
-					transform: scaleY(1);
-				}
-
-				& ~ .menu-button {
-					background-image: url("/images/close.svg");
-					background-size: 40%;
-				}
-			}
-		}
-
-		> .list {
-			opacity: 0;
-			position: absolute;
-			right: 0;
-			top: mainHeaderHeight;
-			transform-origin: top;
-			transform: scaleY(0);
-			transition: .3s all;
-			z-index: -1;
-		}
-
-		.link {
-			border-bottom: solid 1px #eee;
-			color: #666;
-			display:block;
-			padding: 15px 30px;
-			text-transform: uppercase;
-		}
+	
+	.link{
+		color: #000;
+		font-size: 14px;
+		font-weight: bold;
+		text-transform: uppercase;
 	}
 
 	.banner {
@@ -108,5 +76,77 @@ mainHeaderHeight = 50px;
 			display: block;
 			padding-top: 33.14%;
 		}
+	}
+	
+	#open-menu {
+		display: none;
+	}
+	
+	@media screen and (max-width: 1149px){
+		.main-nav {
+			margin-left: auto;
+
+			#open-menu {
+
+				&:checked {
+					& ~ .list {
+						opacity: 1;
+						transform: scaleY(1);
+						visibility: visible;
+					}
+
+					& ~ .menu-button {
+						background-image: url("/images/close.svg");
+						background-size: 40%;
+					}
+				}
+			}
+
+			.link {
+				border-bottom: solid 1px #eee;
+				display:block;
+				padding: 15px 30px;
+			}
+		}
+
+		.logo {
+			margin-right: auto;
+		}
+
+		.list {
+			opacity: 0;
+			position: absolute;
+			right: 0;
+			top: mainHeaderHeight;
+			transform-origin: top;
+			transform: scaleY(0);
+			transition: .3s transform, .3s opacity;
+			visibility: hidden;
+			z-index: -1;
+		}
+		
+
+	}
+
+	@media screen and (min-width: 1150px){
+		.list{
+			align-items: center;
+			display: flex;
+			height: 100%;
+			justify-content: space-around;
+			width: 450px;
+
+		}
+				
+
+		.menu-button {
+			display: none;
+		}
+		
+		.logo {
+			margin-right: 20px;
+		}
+		
+
 	}
 }
