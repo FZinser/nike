@@ -1,5 +1,3 @@
-// import View from 'views/view';
+const initProductFilter = require("./views/product-filter.js");
 
-// const g = 9.81;
-
-console.log('Hello World');
+initProductFilter();
