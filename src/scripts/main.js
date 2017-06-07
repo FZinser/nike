@@ -1,3 +1,5 @@
-const initProductFilter = require("./views/product-filter.js");
+const initProductFilter = require("./modules/product-filter.js");
+const initProducts = require("./modules/product.js");
 
 initProductFilter();
+initProducts();

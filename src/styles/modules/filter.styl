@@ -12,16 +12,11 @@
 }
 
 .field-category{
-	color: #999;
+	color: #9a9a9a;
 	padding-left: 10px;
 }
 
 
-
-.check-field{
-	color: #999;
-	border-color: #999;
-}
 
 .product-filter{
 	margin: 40px 0px 10px 0px;	
@@ -40,10 +35,30 @@
 	border: solid 1px black;
 	color: white;
 	font-size: 13px;
+	font-weight: bold;
 	height: 40px;
 	margin-left:auto;
 	padding:10px 10px;
 	text-transform: uppercase;
-	font-weight: bold;
 	
 }
+
+.products{
+	border: solid 1px black;
+	display: inline-block;
+	width: 200px;
+	
+	.banner{
+		display: inline-block;
+		margin-left: 50%;
+		transform: translateX(-@margin-left);
+	}
+	
+	.single-product{
+		margin-left: 50%;
+		transform: translateX(-@margin-left);
+		width:80%;
+	}
+	
+}
+
