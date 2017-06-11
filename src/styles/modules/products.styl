@@ -4,6 +4,28 @@
 	.products-title{
 		margin-bottom: 40px;
 	}
+
+	.peppermint-dots {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		padding: 20px 0;
+
+		li {
+			background-color: lighten(gray-theme, 40%);
+			border-radius: 100%;
+			height: 12px;
+			margin: 0 10px;
+			outline: none;
+			width: @height;
+
+			&.peppermint-active-dot {
+				background-color: dark-gray-theme;
+				transform-origin: center;
+				transform: scale(1.25);
+			}
+		}
+	}
 }
 
 .products {

@@ -13,22 +13,31 @@ const mapCategories = {
 
 const endPoint = "http://www.raphaelfabeni.com.br/rv/data.json";
 
-const productColumns = {
-	'desktop': {
-		width: 1149,
-		columns: 2
-	},
+const checkScreenSize = function(screenSize) {
+	const breakPoints = {
+		desktop: {
+			innerWidth: 1150,
+			itemsPerPage: 4
+		},
+		tablet: {
+			innerWidth: 720,
+			itemsPerPage: 2
+		},
+		mobile: {
+			innerWidth: 360,
+			itemsPerPage: 1
+		}
+	};
 
-	'tablet': {
-		width: 720,
-		columns: 4
-	},
+	const breakPoint = Object.keys(breakPoints)
+		.find(function(screen) {
+			let breakPoint = breakPoints[screen];
 
-	'mobile': {
-		width: 360,
-		columns: 8
-	},
-};
+			return breakPoint.innerWidth <= screenSize && breakPoint;
+		});
+
+	return breakPoints[breakPoint].itemsPerPage;
+}
 
 const productsWrapper = document.querySelector(".products-result");
 
@@ -101,19 +110,34 @@ const singleProductTemplate = function({ image, title, category, price, installm
 
 const singleCategoryTemplate = function(categories, products){
 	return categories.map(function({title, slug}){
+		let filteredProducts = products.filter(function(product){
+			return product.sectionCategory === slug;
+		});
+
+		let itemsPerPage = checkScreenSize(window.innerWidth);
+
+		let fourts = [];
+
+		while(filteredProducts.length) {
+			fourts.push(filteredProducts.splice(0, itemsPerPage));
+		}
+
 		return `
 			<div class="single-category">
 				<div class="products-title"><h4>${title}</h4></div>
 				<div class="products carousel clearfix">
-					${products.filter(function(product){
-						return product.sectionCategory === slug;
-					})
-					.map(function(product, index, arr){
+					${
+					fourts.map(function(group){
 						return `
-							${singleProductTemplate(product)}
+							<div class="row">
+								${
+									group.map(function(product) {
+										return singleProductTemplate(product)
+									}).join("")
+								}
+							</div>
 						`
-					})
-					.join("")
+					}).join("")
 				}
 				</div>
 			</div>
@@ -127,12 +151,12 @@ const renderCategories = function(categories, products){
 		products
 	);
 
-	// [ ...productsWrapper.querySelectorAll('.products') ]
-	// 	.forEach(function(product) {
-	// 		Peppermint(product, {
-	// 			dots: true
-	// 		});
-	// 	})
+	[ ...productsWrapper.querySelectorAll('.products') ]
+		.forEach(function(product) {
+			Peppermint(product, {
+				dots: true
+			});
+		});
 };
 
 const initProducts = function(){
@@ -143,6 +167,16 @@ const initProducts = function(){
 
 			initProductFilter(categories, products, renderCategories);
 			renderCategories(categories, products);
+
+			let resizeTimer;
+
+			window.addEventListener('resize', function() {
+				clearTimeout(resizeTimer);
+
+				resizeTimer = setTimeout(function() {
+					renderCategories(categories, products);
+				}, 250);
+			});
 		})
 };
 
