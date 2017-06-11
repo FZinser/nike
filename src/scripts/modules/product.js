@@ -1,25 +1,49 @@
+const initProductFilter = require("./product-filter.js");
+const Peppermint = require('../vendors/carousel.js');
+
 let productState = {
 		categories: {},
-		products: {} 
+		products: {}
 };
 
-let mapCategories = {
+const mapCategories = {
 	"best-sellers": "Mais Vendidos",
 	"releases": "Lançamentos"
 };
 
+const endPoint = "http://www.raphaelfabeni.com.br/rv/data.json";
+
+const productColumns = {
+	'desktop': {
+		width: 1149,
+		columns: 2
+	},
+
+	'tablet': {
+		width: 720,
+		columns: 4
+	},
+
+	'mobile': {
+		width: 360,
+		columns: 8
+	},
+};
+
+const productsWrapper = document.querySelector(".products-result");
+
 const mapCategoriesResponse = function(categories) {
 	return categories.reduce(function(prev, next, index) {
  		prev[next] = {
- 			title: mapCategories[next], 
+ 			title: mapCategories[next],
  			slug: next
  		};
  		return prev;
-	}, {});	
+	}, {});
 };
 
 const getProductState = function() {
-	return fetch("http://www.raphaelfabeni.com.br/rv/data.json")
+	return fetch(endPoint)
 	.then(function(data){
 		return data.json();
 	})
@@ -27,7 +51,6 @@ const getProductState = function() {
 		let categories = Object.keys(data);
 		productState.categories = mapCategoriesResponse(categories);
 		productState.products = mapProductResponse(data);
-		console.log(productState.products);
 		return data;
 	});
 }
@@ -37,6 +60,8 @@ const mapProductResponse = function(products) {
 	.reduce(function(prev, next){
 		let productItem = products[next].map(function(item){
 			return Object.assign({},item,{
+				highTop: item['high-top'],
+				type: `cano_${item['high-top'] ? 'alto' : 'baixo'}`,
 				sectionCategory: next
 			})
 		})
@@ -48,32 +73,28 @@ const mapProductResponse = function(products) {
 	},{})
 };
 
-
-
-
-const productsWrapper = document.querySelector(".products-result");
-
-const singleProductTemplate = function({ image, title, category, price, installments }) {
+const singleProductTemplate = function({ image, title, category, price, installments, highTop }) {
 	return `
-		<div class="product-wrapper">
-			<div class="single-product">
-				<div class="banner">
-					<img src="${image}">
-				</div>
-				<div class="customizer">
-					<span class="desc">Personalize</span>
-				</div>
-				<div class="description">
-					${title}
-				</div>
-				<div class="price">
-					${price}
-				</div>
-				<div class="price-info">
-					ou ${installments.number}X ${installments.value} sem juros
-				</div>
-				<button class="ui-btn">Comprar</button>
+		<div class="single-product">
+			<div class="banner">
+				<img src="${image}">
 			</div>
+			<div class="customizer">
+				<span class="desc">Personalize</span>
+			</div>
+			<div class="description">
+				${title}
+			</div>
+			<div class="category">
+				${`Cano ${ highTop ? 'Alto' : 'Baixo'}`}
+			</div>
+			<div class="price">
+				R$ ${price}
+			</div>
+			<div class="price-info">
+				ou ${installments.number}X ${installments.value} sem juros
+			</div>
+			<button class="ui-btn">Comprar</button>
 		</div>
 	`
 };
@@ -81,16 +102,20 @@ const singleProductTemplate = function({ image, title, category, price, installm
 const singleCategoryTemplate = function(categories, products){
 	return categories.map(function({title, slug}){
 		return `
-			<div class="products-title"><h4>${title}</h4></div>
-			<div class="products">
-				${products.filter(function(product){
-					return product.sectionCategory === slug;
-				})
-				.map(function(product){
-					return singleProductTemplate(product)
-				})
-				.join("")
-			}
+			<div class="single-category">
+				<div class="products-title"><h4>${title}</h4></div>
+				<div class="products carousel clearfix">
+					${products.filter(function(product){
+						return product.sectionCategory === slug;
+					})
+					.map(function(product, index, arr){
+						return `
+							${singleProductTemplate(product)}
+						`
+					})
+					.join("")
+				}
+				</div>
 			</div>
 		`
 	}).join("")
@@ -98,17 +123,31 @@ const singleCategoryTemplate = function(categories, products){
 
 const renderCategories = function(categories, products){
 	productsWrapper.innerHTML = singleCategoryTemplate(
-		Object.keys(categories).map(category => categories[category]),
-		Object.keys(products).map(product => products[product])
-	)
+		categories,
+		products
+	);
 
+	// [ ...productsWrapper.querySelectorAll('.products') ]
+	// 	.forEach(function(product) {
+	// 		Peppermint(product, {
+	// 			dots: true
+	// 		});
+	// 	})
 };
 
 const initProducts = function(){
 	getProductState()
 		.then(function(){
-			return renderCategories(productState.categories, productState.products);	
+			let products = Object.keys(productState.products).map(product => productState.products[product]),
+					categories = Object.keys(productState.categories).map(category => productState.categories[category]);
+
+			initProductFilter(categories, products, renderCategories);
+			renderCategories(categories, products);
 		})
 };
 
-module.exports = initProducts;
+module.exports = {
+	initProducts,
+	productState,
+	renderCategories
+};
