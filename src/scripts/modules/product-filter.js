@@ -50,7 +50,8 @@ const initProductFilter = function(categories, products, onFilterCallback){
 };
 
 const bindFilterEvents = function(filterChecks, categories, products, callback) {
-	let currentFilters = [];
+	let currentFilters = [],
+			currentFilteredProducts = products;
 
 	const allFiltersButton = document.querySelector('[data-all-filters]');
 
@@ -75,17 +76,27 @@ const bindFilterEvents = function(filterChecks, categories, products, callback) 
 					currentFilters = currentFilters.filter(item => item !== id);
 				}
 
-				let filteredProducts = products.filter(product => {
+				const filteredProducts = products.filter(product => {
 					if (currentFilters.includes(product.category) || currentFilters.includes(product.type)) {
 						return product;
 					}
 				});
 
-				console.log('Filtros Atuais', currentFilters);
+				currentFilteredProducts = filteredProducts.length ? filteredProducts : products;
 
-				callback(categories, filteredProducts.length ? filteredProducts : products);
+				callback(categories, currentFilteredProducts);
 			})
 		});
+
+	let resizeTimer;
+
+	window.addEventListener('resize', function() {
+		clearTimeout(resizeTimer);
+
+		resizeTimer = setTimeout(function() {
+			callback(categories, currentFilteredProducts);
+		}, 250);
+	});
 }
 
 module.exports = initProductFilter;

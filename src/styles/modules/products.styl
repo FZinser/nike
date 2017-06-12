@@ -1,7 +1,15 @@
-.single-category{
+.single-category {
 	margin: 80px auto;
+	
+	@media screen and (max-width: desktop){
+		margin: 40px auto;	
+		
+		&:nth-of-type(n+1) {
+			margin-bottom: 20px;
+		}
+	}
 
-	.products-title{
+	.products-title {
 		margin-bottom: 40px;
 	}
 
@@ -60,14 +68,14 @@
 		margin-bottom: 10px;
 	}
 
-	.price{
+	.price {
 		color: gray-theme;
 		font-size: 16px;
 		font-weight: bold;
 		margin-bottom: 10px;
 	}
 
-	.price-info{
+	.price-info {
 		color: #999;
 		font-size: 14px;
 		margin-bottom: 10px;

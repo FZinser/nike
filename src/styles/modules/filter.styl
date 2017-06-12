@@ -1,36 +1,48 @@
 
-.product-desc{
+.product-desc {
 	color: #000;
 	font-size: 18px;
 	font-weight: bold;
 
 }
 
-.single-filter{
+.single-filter {
 	display: inline-flex;
 	margin: 0px 20px;
+	
+	@media screen and (max-width: desktop) {
+		display: block;
+		font-size: 18px;
+		margin: 10px 0px;
+
+	}
 }
 
-.field-category{
+.field-category {
 	color: #9a9a9a;
 	padding-left: 10px;
+
 }
 
 
 
-.product-filter{
+.product-filter {
 	margin: 40px 0px 10px 0px;
-
-	>.container{
+	
+	>.container {
 		align-items: baseline;
 		border-bottom: solid 1px #999;
 		display: flex;
 		margin-bottom:4px;
 		padding-bottom: 15px;
+		
+		@media screen and (max-width: desktop) {
+			align-items: center;
+		}
 	}
 }
 
-.ui-btn{
+.ui-btn {
 	background-color: dark-gray-theme;
 	color: white;
 	font-size: 12px;
