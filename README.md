@@ -6,7 +6,7 @@ Estudei o básico de Gulp e achei no github um boilerplate que atendesse a neces
 Usei Stylus como pré-processador.
 Fiquei em dúvida em como fazer o filtro e o carousel, mas no final deu certo.
 Usei uma ferramenta de static web publishing chamada Surge.
-Foi trabalhaso e ao mesmo tempo recompensador esse desafio.
+Foi trabalhoso e ao mesmo tempo recompensador esse desafio.
 
 ## Informações gerais
 [URL do projeto](http://uppity-eggs.surge.sh)
